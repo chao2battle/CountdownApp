@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Countdown App</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="days_left">Days Left</string>
+    <string name="countdowns">Countdowns</string>
+    <string name="create_new_countdown">Create new countdown</string>
+</resources>
