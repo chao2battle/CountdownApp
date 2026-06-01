@@ -2,8 +2,10 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="105dp">
+    android:layout_height="105dp"
+    tools:context=".MainActivity" >
 
     <TextView
         android:id="@+id/countdownName"
@@ -49,4 +51,17 @@
         android:layout_marginEnd="15dp"
         android:layout_alignParentBottom="true"
         android:background="#808080"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="false"
+        android:layout_marginEnd="12dp"
+        android:text="@string/edit"
+        app:iconPadding="8dp" />
 </RelativeLayout>
