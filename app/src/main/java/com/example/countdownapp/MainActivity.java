@@ -1,5 +1,8 @@
 package com.example.countdownapp;
 
+import static com.google.android.material.datepicker.MaterialDatePicker.INPUT_MODE_CALENDAR;
+import static com.google.android.material.datepicker.MaterialDatePicker.thisMonthInUtcMilliseconds;
+
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,7 +24,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.timepicker.MaterialTimePicker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private List<CountdownItem> countdownList;
     private FloatingActionButton addCount;
     private Button pickDate;
+    private int selectDay;
+    private int selectYear;
+    private int selectMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,28 +86,33 @@ public class MainActivity extends AppCompatActivity {
     private void showCountdownDialog() {
         View view = getLayoutInflater().inflate(R.layout.countdown_add_dialog, null);
         final EditText etTitle = view.findViewById(R.id.etTitle);
-        final Spinner spMonth = view.findViewById(R.id.month);
+        final CalendarView datePick = view.findViewById(R.id.pickDate);
 
 
-        ArrayAdapter<CharSequence> monthAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.months_array,
-                android.R.layout.simple_spinner_item
-        );
-        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spMonth.setAdapter(monthAdapter);
+
+        datePick.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
+                selectDay = day;
+                selectMonth = month;
+                selectYear = year;
+            }
+        });
+
+        /*selectDay = 5;
+        selectMonth = 6;
+        selectYear = 2026;*/
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add new Countdown");
         builder.setView(view);
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String title = etTitle.getText().toString().trim();
                 if(!title.isEmpty()) {
-                    //CountdownItem newCountdown = new CountdownItem(title, finalDate);
-                    //countdownList.add(newCountdown);
+                    CountdownItem newCountdown = new CountdownItem(title, selectMonth, selectDay, selectYear);
+                    countdownList.add(newCountdown);
                     adapter.notifyItemInserted(countdownList.size()-1);
                     recyclerView.smoothScrollToPosition(countdownList.size()-1);
                     Toast.makeText(MainActivity.this, "Countdown has been created", Toast.LENGTH_SHORT).show();

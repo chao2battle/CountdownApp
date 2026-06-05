@@ -13,6 +13,11 @@ public class CountdownItem {
         this.date = date;
     }
 
+    public CountdownItem(String name, int month, int day, int year) {
+        this.name = name;
+        this.date = LocalDate.of(year, month+1, day);
+    }
+
     public String getName() {
         return name;
     }
