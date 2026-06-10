@@ -102,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(countdown.getYear(), countdown.getMonth()-1, countdown.getDay(), 0, 0, 0);
         datePick.setDate(calendar.getTimeInMillis());
 
+        selectDay = countdown.getDay();
+        selectMonth = countdown.getMonth();
+        selectYear = countdown.getYear();
+
         datePick.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
                 selectDay = day;
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!title.isEmpty()) {
                     CountdownItem editCountdown = new CountdownItem(title, selectMonth, selectDay, selectYear);
                     countdownList.set(position, editCountdown);
-                    adapter.notifyItemInserted(position);
+                    adapter.notifyItemChanged(position);
                     Toast.makeText(MainActivity.this, "Countdown has been changed", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(MainActivity.this, "Title cannot be empty", Toast.LENGTH_SHORT).show();
@@ -131,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 countdownList.remove(position);
+                adapter.notifyItemRemoved(position);
                 Toast.makeText(MainActivity.this, "Countdown has been deleted", Toast.LENGTH_SHORT).show();
             }
         });
