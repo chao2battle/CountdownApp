@@ -38,6 +38,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new CountdownAdapter(countdownList);
+        adapter = new CountdownAdapter(this, countdownList);
         recyclerView.setAdapter(adapter);
 
 
@@ -78,8 +79,62 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        adapter.setOnItemClickListener(new CountdownAdapter.OnItemClickListener() {
+
+            @Override
+            public void onEditClick(int position) {
+                showEditNoteDialog(position);
+            }
+        });
 
 
+
+    }
+
+    private void showEditNoteDialog(int position) {
+        CountdownItem countdown = countdownList.get(position);
+        View view = getLayoutInflater().inflate(R.layout.countdown_add_dialog, null);
+        final EditText etTitle = view.findViewById(R.id.etTitle);
+        final CalendarView datePick = view.findViewById(R.id.pickDate);
+
+        etTitle.setText(countdown.getName());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(countdown.getYear(), countdown.getMonth()-1, countdown.getDay(), 0, 0, 0);
+        datePick.setDate(calendar.getTimeInMillis());
+
+        datePick.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
+                selectDay = day;
+                selectMonth = month;
+                selectYear = year;
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Countdown");
+        builder.setView(view);
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String title = etTitle.getText().toString().trim();
+                if(!title.isEmpty()) {
+                    CountdownItem editCountdown = new CountdownItem(title, selectMonth, selectDay, selectYear);
+                    countdownList.set(position, editCountdown);
+                    adapter.notifyItemInserted(position);
+                    Toast.makeText(MainActivity.this, "Countdown has been changed", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Title cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                countdownList.remove(position);
+                Toast.makeText(MainActivity.this, "Countdown has been deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.create().show();
 
     }
 

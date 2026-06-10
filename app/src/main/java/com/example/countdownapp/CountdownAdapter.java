@@ -1,8 +1,10 @@
 package com.example.countdownapp;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,8 +15,19 @@ import java.util.List;
 public class CountdownAdapter extends RecyclerView.Adapter<CountdownAdapter.CountdownViewHolder> {
 
     private List<CountdownItem> countdownList;
+    private OnItemClickListener listener;
+    private Context context;
 
-    public CountdownAdapter(List<CountdownItem> countdownList) {
+    public interface OnItemClickListener {
+        public void onEditClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public CountdownAdapter(Context context, List<CountdownItem> countdownList) {
+        this.context = context;
         this.countdownList = countdownList;
     }
 
@@ -40,14 +53,28 @@ public class CountdownAdapter extends RecyclerView.Adapter<CountdownAdapter.Coun
         return countdownList.size();
     }
 
-    static class CountdownViewHolder extends RecyclerView.ViewHolder {
+    class CountdownViewHolder extends RecyclerView.ViewHolder {
         TextView countdownName, countdownDate, daysLeft;
+        Button editButt;
 
         public CountdownViewHolder(@NonNull View itemView) {
             super(itemView);
             countdownName = itemView.findViewById(R.id.countdownName);
             countdownDate = itemView.findViewById(R.id.countdownDate);
             daysLeft = itemView.findViewById(R.id.daysLeft);
+            editButt = itemView.findViewById(R.id.editButt);
+
+            editButt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getBindingAdapterPosition();
+                        if (position != -1) {
+                            listener.onEditClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }

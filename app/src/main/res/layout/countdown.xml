@@ -53,7 +53,7 @@
         android:background="#808080"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/editButt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="false"

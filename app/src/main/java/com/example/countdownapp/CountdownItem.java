@@ -26,6 +26,20 @@ public class CountdownItem {
         return date.getMonthValue() + "/" + date.getDayOfMonth() + "/" + date.getYear();
     }
 
+    public int getDay() {
+        return date.getDayOfMonth();
+    }
+    public int getMonth() {
+        return date.getMonthValue();
+    }
+    public int getYear() {
+        return date.getYear();
+    }
+
+    public LocalDate getLocalDate() {
+        return date;
+    }
+
     public String getTimeLeft() {
         LocalDate timeNow = LocalDate.now();
         timeLeft = timeNow.until(date, ChronoUnit.DAYS);
